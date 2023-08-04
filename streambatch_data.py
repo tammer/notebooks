@@ -87,10 +87,10 @@ class StreambatchData:
 
     
 
-api_key = open('key.txt').read().strip()
-space = [3.940705,49.345238]
-ndvi_data = StreambatchData(api_key, space,debug=False)
-print(ndvi_data.as_dataframe())
+# api_key = open('key.txt').read().strip()
+# space = [3.940705,49.345238]
+# ndvi_data = StreambatchData(api_key, space,debug=False)
+# print(ndvi_data.as_dataframe())
 
 # asynchonous request
 # ndvi_data = StreambatchData(api_key, space, asyncronous=True)
