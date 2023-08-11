@@ -6,7 +6,7 @@ import pyarrow.parquet # for reading parquet files (implicit dependency)
 import fsspec # for reading parquet files (implicit dependency)
 import s3fs # for reading parquet files (implicit dependency)
 
-class StreambatchData:
+class StreambatchRequest:
     def __init__(self, api_key, space, time=None,asyncronous=False,silent=False,debug=False):
         
         # if space is not in a list, put it in a list
@@ -51,7 +51,7 @@ class StreambatchData:
             print("Waiting for results...",end="",flush=True)
             self.wait_for_results()
 
-    def as_dataframe(self):
+    def get_data(self):
         if self.ndvi_data is None and self.final_status == 'Succeeded':
             self.ndvi_data = pd.read_parquet(self.access_url, storage_options={"anon": True})
         return self.ndvi_data
