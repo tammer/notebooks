@@ -8,10 +8,34 @@ import s3fs # for reading parquet files (implicit dependency)
 
 class StreambatchRequest:
     def __init__(self, api_key, space, time=None,asyncronous=False,silent=False,debug=False):
+
+        # set the class variables
+        self.api_header = {'X-API-Key': api_key}
+        self.ndvi_data = None     # the data that is returned from the server
+        self.result = None        # the result of the request. Will be None or the error message if we failed
+        self.final_status = None  # starts as None and will become either 'Succeeded' or 'Failed'
         
-        # if space is not in a list, put it in a list
-        if type(space[0]) is not list:
+        if type(space) is dict:
+            # it must by a single polygon, put it in a list
             space = [space]
+        elif type(space) is list:
+            if len(space) == 0:
+                print("Request Failed: space parameter is an empty list.")
+                return
+            # ok, it is a list, but what is item 0?
+            if type(space[0]) is dict:
+                # great, list of polygons
+                None
+            elif type(space[0]) is list:
+                # great, list of [lat,long]s
+                None
+            else:
+                # must be a single [lat,long]
+                space = [space]
+        else:
+            print("Request Failed: space parameter is in a format that is not understood.")
+            return
+        
         self.space = space
 
         if not silent: print("Number of locations: {}".format(len(space)))
@@ -24,16 +48,10 @@ class StreambatchRequest:
         self.time = time
 
         if not silent: print("Range: {} - {}, unit: {}".format(time['start'],time['end'],time['unit']))
-            
-        # set the class variables
-        self.api_header = {'X-API-Key': api_key}
-        self.ndvi_data = None     # the data that is returned from the server
-        self.result = None        # the result of the request. Will be None or the error message if we failed
-        self.final_status = None  # starts as None and will become either 'Succeeded' or 'Failed'
 
         if debug:
             print("debug no call to server")
-            self.query_id = '7877840e-6a54-4ab6-b5a9-a589dee03593'
+            self.query_id = '8fae9b4c-7740-4c3f-af80-8fb558ff5a7a'
             self.access_url = f's3://streambatch-data/{self.query_id}.parquet'
         else:
             ndvi_request = {'variable': ['ndvi.sentinel2'], 'space': space, 'time': time }
