@@ -14,6 +14,7 @@ class StreambatchRequest:
         self.ndvi_data = None     # the data that is returned from the server
         self.result = None        # the result of the request. Will be None or the error message if we failed
         self.final_status = None  # starts as None and will become either 'Succeeded' or 'Failed'
+        self.silent = silent      # if True, don't print anything
         
         if type(space) is dict:
             # it must by a single polygon, put it in a list
@@ -66,7 +67,7 @@ class StreambatchRequest:
             if not silent: print("Query ID: {}".format(self.query_id))
         
         if asyncronous is False:
-            print("Waiting for results...",end="",flush=True)
+            if not silent: print("Waiting for results...",end="",flush=True)
             self.wait_for_results()
 
     def get_data(self):
@@ -97,9 +98,8 @@ class StreambatchRequest:
         while self.ready() is False:
             self.status() # causes self.ready to be updated
             time.sleep(7)
-            print('.',end="",flush=True)
-        print("")
-        print("Ready.")
+            if not self.silent: print('.',end="",flush=True)
+        if not self.silent: print("")
     
     def today(self): return time.strftime("%Y-%m-%d")
 
