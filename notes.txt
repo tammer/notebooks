@@ -1,2 +1,13 @@
-check savgol vs sentinel2.  got ot hit the peaks
-hello
+
+connection = StreambatchConnect(key,syncronous=True)
+
+my_polygons = { "1": {something} }
+
+df = connection.get_ndvi(my_polygons, time, interpolation, aggregation, source)
+
+OR
+
+query_id = connection.get_ndvi(...,async=True)
+
+while connection.ready(query_id)
+
