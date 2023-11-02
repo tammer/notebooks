@@ -4,6 +4,7 @@ key.txt
 data/
 local.txt
 *temp*
+output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
